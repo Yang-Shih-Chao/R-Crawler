@@ -1,0 +1,51 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Gist
+ @Yang-Shih-Chao
+ Watch 1
+  Star 0
+  Fork 0 pecu/NTUB_Project
+ Code  Issues 0  Pull requests 0  Projects 0  Wiki  Pulse  Graphs
+Branch: master Find file Copy pathNTUB_Project/2016-10-05 R/HiPtt.r
+5a2a2c0  4 minutes ago
+@pecu pecu Rª¦ÂÎ
+1 contributor
+RawBlameHistory     
+31 lines (29 sloc)  831 Bytes
+rm(list=ls(all.names=TRUE))
+library(XML)
+library(RCurl)
+library(httr)
+
+startNo = 1
+endNo   = 3
+subPath = "https://www.ptt.cc/bbs/joke/index"
+alltitle = data.frame()
+for( i in c(startNo:endNo) )
+{
+  print(i)
+  urlPath  = paste(subPath, i, ".html", sep = "")
+  temp     = getURL(urlPath)
+  xmlData  = htmlParse(temp) 
+  titleRUL = xpathSApply(xmlData, "//div[@class=\"title\"]/a//@href")
+  titleRUL2 = xpathSApply(xmlData, "//div[@class=\"title\"]",xmlvalue)
+  subtitle = data.frame(titleRUL)
+  alltitle = rbind(alltitle, subtitle)
+}
+
+allPath = length(alltitle$titleRUL)
+tempURL = "https://www.ptt.cc"
+for( j in 1:allPath )
+{
+  urlPath  = paste(tempURL, alltitle$titleRUL[j], sep = "")
+  temp     = getURL(urlPath)
+  xmlData  = htmlParse(temp) 
+  Pcontent = xpathSApply(xmlData, "//div[@id=\"main-content\"]", xmlValue)
+  filename = paste("./data/", j, ".txt", sep = "")
+  write.csv(Pcontent, filename)
+}
+Contact GitHub API Training Shop Blog About
+c 2016 GitHub, Inc. Terms Privacy Security Status Help
